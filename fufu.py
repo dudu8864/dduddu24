@@ -5,29 +5,7 @@ import time
 
 app = Ursina()
 
-
-class yee(FirstPersonController):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.speed_normal = 5  
-        self.speed_run = 10
-        self.mouse_sensitivity_default = Vec2(40, 40)
-
-    def update(self):
-        super().update()
-
-        if held_keys['shift']:
-            self.speed = self.speed_run
-        else:
-            self.speed = self.speed_normal
-
-        if mouse.locked:
-            self.mouse_sensitivity = self.mouse_sensitivity_default
-        else:
-            self.mouse_sensitivity = Vec2(0, 0)
-
-
-player = yee(position=(0, 0, 0), collider='capsule')
+player = FirstPersonController(collider = 'box')
 
 ball = Entity(
     parent=camera,
@@ -48,16 +26,12 @@ blocks = []
 
 def input(key):
     global blocks
-    if key == 'left mouse down':
-        hit_info = raycast(camera.world_position, camera.forward, distance=100, ignore=[player])
-        if hit_info.hit and hit_info.entity == ground:
-            block = Entity(model='cube',
-                           color=color.red.tint(0.4),
-                           texture='brick',
-                           scale=(2,2,2),
-                           world_position=hit_info.world_point,
-                           collider='box')
+    if ground.hovered:
+        if key == 'left mouse down':
+            block = Entity(model='cube',color=color.red.tint(0.4),texture='brick', scale=(2,2,2),world_position=mouse.world_point, collider = 'box' )
             blocks.append(block)
+            print('wa sans!')
+            
     for block in blocks:
             if block.hovered == True: 
                 if key == 'left mouse down': 
