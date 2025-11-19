@@ -7,6 +7,7 @@ app = Ursina()
 
 player = FirstPersonController(collider = 'box')
 
+
 ball = Entity(
     parent=camera,
     model='sphere',
@@ -18,6 +19,8 @@ ball = Entity(
 
 ground = Entity(model='plane', scale=(50,1,50), color=color.white.tint(-0.2), collider='box')
 
+
+player.jump_height = 3
 mouse.locked = True
 window.fullscreen = True
 camera.fov = 90
@@ -51,6 +54,10 @@ def input(key):
         if ball.parent == camera:
             ball.parent = scene
             ball.position = player.world_position + player.forward * 1 + Vec3(0, 0.5, 0)
+            if ball.intersects().hit:
+                ball.position -= player.forward * 0.1
+            else:
+                ball.velocity = player.forward * 20
         else:
             ball.parent = camera
             ball.position = Vec3(0.5, -0.3, 0.8)
